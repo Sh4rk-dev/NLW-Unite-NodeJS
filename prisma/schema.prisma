@@ -1,0 +1,18 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  url      = env("DATABASE_URL")
+  provider = "sqlite"
+}
+
+model Event {
+  id               String  @id @default(uuid())
+  title            String
+  details          String?
+  slug             String  @unique
+  maximumAttendees Int?    @map("maximum_attendees")
+
+  @@map("events")
+}
