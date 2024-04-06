@@ -1,15 +1,17 @@
+import {
+  generateSlug
+} from "./chunk-KDMJHR3Z.mjs";
+import {
+  BadRequest
+} from "./chunk-JRO4E4TH.mjs";
+import {
+  prisma
+} from "./chunk-JV6GRE7Y.mjs";
+
+// src/routes/create-events.ts
 import { z } from "zod";
-
-import { FastifyInstance } from "fastify";
-import { ZodTypeProvider } from "fastify-type-provider-zod";
-
-import { prisma } from "../lib/prisma";
-import { generateSlug } from "../utils/generate-slug";
-
-import { BadRequest } from "./_errors/bad-request";
-
-export async function createEvents(app: FastifyInstance) {
-  app.withTypeProvider<ZodTypeProvider>().post(
+async function createEvents(app) {
+  app.withTypeProvider().post(
     "/events",
     {
       schema: {
@@ -18,40 +20,39 @@ export async function createEvents(app: FastifyInstance) {
         body: z.object({
           title: z.string().min(4),
           details: z.string().nullable(),
-          maximumAttendees: z.number().int().positive().nullable(),
+          maximumAttendees: z.number().int().positive().nullable()
         }),
         response: {
           201: z.object({
-            eventId: z.string().uuid(),
-          }),
-        },
-      },
+            eventId: z.string().uuid()
+          })
+        }
+      }
     },
     async (request, reply) => {
       const { details, maximumAttendees, title } = request.body;
-
       const slug = generateSlug(title);
-
       const eventWithSameSlug = await prisma.event.findUnique({
         where: {
-          slug,
-        },
+          slug
+        }
       });
-
       if (eventWithSameSlug !== null) {
         throw new BadRequest("Another event with same title already exists");
       }
-
       const event = await prisma.event.create({
         data: {
           title,
           details,
           maximumAttendees,
-          slug: slug,
-        },
+          slug
+        }
       });
-
       return reply.status(201).send({ eventId: event.id });
     }
   );
 }
+
+export {
+  createEvents
+};

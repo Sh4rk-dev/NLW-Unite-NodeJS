@@ -9,7 +9,7 @@ Content-Type: application/json
 
 ### 
 
-POST http://localhost:3333/events/67741c4b-8e53-4368-925b-5b2a27c9bd41/attendees
+POST http://localhost:3333/events/9f917ae9-805e-4944-9406-a77cdf1b95c8/attendees
 Content-Type: application/json
 
 {
@@ -19,8 +19,16 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:3333/events/67741c4b-8e53-4368-925b-5b2a27c9bd41
+GET http://localhost:3333/events/9f917ae9-805e-4944-9406-a77cdf1b95c8
 
 ###
 
-GET http://localhost:3333/attendees/7/badge
+GET http://localhost:3333/attendees/10/badge
+
+###
+
+GET http://localhost:3333/attendees/10/check-in
+
+###
+
+GET http://localhost:3333/events/9f917ae9-805e-4944-9406-a77cdf1b95c8/attendees?query=Renan

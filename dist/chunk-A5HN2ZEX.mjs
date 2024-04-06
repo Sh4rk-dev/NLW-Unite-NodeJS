@@ -1,21 +1,21 @@
+import {
+  BadRequest
+} from "./chunk-JRO4E4TH.mjs";
+import {
+  prisma
+} from "./chunk-JV6GRE7Y.mjs";
+
+// src/routes/get-event.ts
 import { z } from "zod";
-
-import { FastifyInstance } from "fastify";
-import { ZodTypeProvider } from "fastify-type-provider-zod";
-
-import { prisma } from "../lib/prisma";
-
-import { BadRequest } from "./_errors/bad-request";
-
-export async function getEvent(app: FastifyInstance) {
-  app.withTypeProvider<ZodTypeProvider>().get(
+async function getEvent(app) {
+  app.withTypeProvider().get(
     "/events/:eventId",
     {
       schema: {
         summary: "Get an event",
         tags: ["Events"],
         params: z.object({
-          eventId: z.string().uuid(),
+          eventId: z.string().uuid()
         }),
         response: {
           200: z.object({
@@ -25,15 +25,14 @@ export async function getEvent(app: FastifyInstance) {
               title: z.string(),
               details: z.string().nullable(),
               maximumAttendees: z.number().int().nullable(),
-              attendeesAmount: z.number().int(),
-            }),
-          }),
-        },
-      },
+              attendeesAmount: z.number().int()
+            })
+          })
+        }
+      }
     },
     async (request, reply) => {
       const { eventId } = request.params;
-
       const event = await prisma.event.findUnique({
         select: {
           id: true,
@@ -43,19 +42,17 @@ export async function getEvent(app: FastifyInstance) {
           maximumAttendees: true,
           _count: {
             select: {
-              attendees: true,
-            },
-          },
+              attendees: true
+            }
+          }
         },
         where: {
-          id: eventId,
-        },
+          id: eventId
+        }
       });
-
       if (event === null) {
         throw new BadRequest("Event not found");
       }
-
       return reply.send({
         event: {
           id: event.id,
@@ -63,9 +60,13 @@ export async function getEvent(app: FastifyInstance) {
           title: event.title,
           details: event.details,
           maximumAttendees: event.maximumAttendees,
-          attendeesAmount: event._count.attendees,
-        },
+          attendeesAmount: event._count.attendees
+        }
       });
     }
   );
 }
+
+export {
+  getEvent
+};
