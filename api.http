@@ -2,7 +2,25 @@ POST http://localhost:3333/events
 Content-Type: application/json
 
 {
-    "title":"Unite Summit",
+    "title":"Essa porra não funciona",
     "details": "Um evento para quem é apaixondado por programação",
     "maximumAttendees": 100
 }
+
+### 
+
+POST http://localhost:3333/events/67741c4b-8e53-4368-925b-5b2a27c9bd41/attendees
+Content-Type: application/json
+
+{
+    "name" : "Renan Rapace",
+    "email" : "renanrapace13@gmail.com" 
+}
+
+###
+
+GET http://localhost:3333/events/67741c4b-8e53-4368-925b-5b2a27c9bd41
+
+###
+
+GET http://localhost:3333/attendees/7/badge
